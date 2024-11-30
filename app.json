@@ -14,7 +14,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.prawee.expo-ble"
+      "bundleIdentifier": "com.prawee.ble"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,7 +25,8 @@
         "android.permission.BLUETOOTH",
         "android.permission.BLUETOOTH_ADMIN",
         "android.permission.BLUETOOTH_CONNECT"
-      ]
+      ],
+      "package": "com.prawee.ble"
     },
     "web": {
       "favicon": "./assets/favicon.png"
