@@ -2,8 +2,12 @@ import { useState } from "react";
 import { PermissionsAndroid, Platform } from "react-native";
 import * as ExpoDevice from "expo-device";
 import { BleManager } from "react-native-ble-plx";
+import base64 from "react-native-base64";
 
 const bleManager = new BleManager();
+
+const DATA_SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";  //6e400001-b5a3-f393-e0a9-e50e24dcca9e
+const COLOR_CHARACTERISTIC_UUID = "19b10001-e8f2-537e-4f6c-d104768a1217";
 
 function useBLE() {
     const [allDevices, setAllDevices] = useState([]);
@@ -97,7 +101,38 @@ function useBLE() {
         });
     };
 
+    const onDataUpdate = (error, characteristic) => {
+        if (error) {
+            console.log(error);
+            return;
+        } else if (!characteristic?.value) {
+            console.log("No Data was received");
+            return;
+        }
+
+        const colorCode = base64.decode(characteristic.value);
+
+        let color = "white";
+        if (colorCode === "B") {
+            color = "blue";
+        } else if (colorCode === "R") {
+            color = "red";
+        } else if (colorCode === "G") {
+            color = "green";
+        }
+        setColor(color);
+    }
+
     const startStreamingData = (device) => {
+        if (device) {
+            device.monitorCharacteristicsForService(
+                DATA_SERVICE_UUID,
+                COLOR_CHARACTERISTIC_UUID,
+                onDataUpdate
+            );
+        } else {
+            console.log("No Device Connected");
+        }
     };
 
     return {
