@@ -64,7 +64,16 @@ function useBLE() {
         }
     };
 
-    const connectToDevice = async () => {
+    const connectToDevice = async (device) => {
+        try {
+            const deviceConnection = await bleManager.connectToDevice(device.id);
+            setConnectedDevice(deviceConnection);
+            await deviceConnection.discoverAllServicesAndCharacteristics();
+            bleManager.stopDeviceScan();
+            startStreamingData(deviceConnection);
+        } catch (e) {
+            console.log("FAILED TO CONNECT", e);
+        }
     };
 
     const isDuplicateDevice = (devices, nextDevice) => {
@@ -88,7 +97,7 @@ function useBLE() {
         });
     };
 
-    const startStreamingData = () => {
+    const startStreamingData = (device) => {
     };
 
     return {
