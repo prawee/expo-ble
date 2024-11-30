@@ -1,10 +1,27 @@
+import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import useBLE from './lib/ble';
 
 export default function App() {
-  const { color, connectToDevice, connectedDevice } = useBLE();
+  const { color, connectedDevice, requirePermissions, scanForPeripherals } = useBLE();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const scanForDevices = async() => {
+    console.log("scanForDevices is called. ", isModalVisible);
+    const isPermissionsEnabled = await requirePermissions();
+    if (isPermissionsEnabled) {
+      scanForPeripherals();
+    }
+  };
+  
+  const openModal = () => {
+    console.log("openModal is called. ", isModalVisible);
+    scanForDevices();
+    setIsModalVisible(true);
+  };
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: color }]}>
       <View style={styles.heartRateTitleWrapper}>
@@ -14,6 +31,9 @@ export default function App() {
           <Text style={styles.heartRateTitleText}>Please connect the Arduino</Text>
         )}
       </View>
+      <TouchableOpacity style={styles.connectButton} onPress={openModal}>
+        <Text style={styles.connectButtonText}>Connect</Text>
+      </TouchableOpacity>
       <StatusBar style="auto" />
     </SafeAreaView>
   );
@@ -35,5 +55,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginHorizontal: 20,
     color: "black",
+  },
+  connectButton: {
+    backgroundColor: "#ff6060",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 50,
+    marginHorizontal: 20,
+    marginBottom: 5,
+    borderRadius: 8,
+  },
+  connectButtonText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold", 
   },
 });
