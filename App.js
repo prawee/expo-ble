@@ -1,20 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+
+import useBLE from './lib/ble';
 
 export default function App() {
+  const { color } = useBLE();
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: color }]}>
       <Text>Ble Solution!</Text>
       <StatusBar style="auto" />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#f2f2f2",
   },
 });
