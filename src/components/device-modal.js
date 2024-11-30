@@ -27,6 +27,7 @@ const deviceModal = (props) => {
     
     const renderDeviceModalListItem = useCallback(
         (item) => {
+            console.log('renderDeviceModalListItem ', item);
             return (
                 <deviceModalItems
                     item={item}

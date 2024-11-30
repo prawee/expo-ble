@@ -3,9 +3,10 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import useBLE from './lib/ble';
+import DeviceModal from './components/device-modal';
 
 export default function App() {
-  const { color, connectedDevice, requirePermissions, scanForPeripherals } = useBLE();
+  const { color, connectedDevice, requirePermissions, scanForPeripherals, connectToDevice, allDevices } = useBLE();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const scanForDevices = async() => {
@@ -14,6 +15,11 @@ export default function App() {
     if (isPermissionsEnabled) {
       scanForPeripherals();
     }
+  };
+
+  const hideModal = () => {
+    console.log("hideModal is called. ", isModalVisible);
+    setIsModalVisible(false);
   };
   
   const openModal = () => {
@@ -34,6 +40,12 @@ export default function App() {
       <TouchableOpacity style={styles.connectButton} onPress={openModal}>
         <Text style={styles.connectButtonText}>Connect</Text>
       </TouchableOpacity>
+      <DeviceModal
+        closeModal={hideModal}
+        visible={isModalVisible}
+        connectToPeripheral={connectToDevice}
+        devices={allDevices}
+      />
       <StatusBar style="auto" />
     </SafeAreaView>
   );
